@@ -20,7 +20,6 @@ The repository is organized as follows:
 
 ### Dependencies
 This project uses **Python 3** and only relies on the following standard libraries:
-- `math` (for Euclidean Distance calculations)
 - `csv` (for data loading and handling)
 
 ### How to Run
