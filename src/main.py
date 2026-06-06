@@ -1,5 +1,7 @@
 import csv
 import os
+import matplotlib.pyplot as plt
+import numpy as np
 
 POSITION_WEIGHTS = {
     'GK': {
@@ -229,7 +231,7 @@ def find_closest_twins(our_player_name, all_players):
             return "Too many players found. Please enter full name!"
         # If no player matches
         else:
-            return "No player found. Make sure the spelling is correct!"
+            return "No player found. Make sure the spelling is correct!"        
     
     # Calculating distances between our player and everyone else
     distances = []
@@ -247,6 +249,57 @@ def find_closest_twins(our_player_name, all_players):
     # Returning the top 5 closest matches
     return our_player, distances[:5]
 
+# Plots a radar chart comparing the target player and their best twin
+def plot_radar_chart(target_player, twin_player):
+    # Identify the player's position and extract the relevant features
+    pos = target_player.position[:2].upper()
+    if 'GK' in pos:
+        weights = POSITION_WEIGHTS['GK']
+    elif 'DF' in pos or 'CB' in pos or 'RB' in pos or 'LB' in pos:
+        weights = POSITION_WEIGHTS['DF']
+    elif 'MF' in pos or 'CM' in pos or 'DM' in pos or 'AM' in pos:
+        weights = POSITION_WEIGHTS['MF']
+    else: # FW
+        weights = POSITION_WEIGHTS['FW']
+
+    features = list(weights.keys())
+    
+    # Get the normalized raw statistics for both players
+    val1 = [target_player.stats.get(f, 0.0) for f in features]
+    val2 = [twin_player.stats.get(f, 0.0) for f in features]
+
+    # Add the first data point again at the end to close the radar chart
+    val1 += val1[:1]
+    val2 += val2[:1]
+    
+    # Divide the circle into equal segments for each feature
+    angles = [n / float(len(features)) * 2 * np.pi for n in range(len(features))]
+    angles += angles[:1]
+
+    # Create the plotting area
+    fig, ax = plt.subplots(figsize=(8, 8), subplot_kw=dict(polar=True))
+    
+    # Target Player (Blue)
+    ax.plot(angles, val1, linewidth=2, linestyle='solid', label=target_player.name, color='#1badcf')
+    ax.fill(angles, val1, '#1badcf', alpha=0.25)
+    
+    # Twin Player (Red)
+    ax.plot(angles, val2, linewidth=2, linestyle='solid', label=twin_player.name, color='#c0392b')
+    ax.fill(angles, val2, '#c0392b', alpha=0.25)
+    
+    # Configure axes and labels
+    ax.set_xticks(angles[:-1])
+    ax.set_xticklabels(features, fontsize=10, fontweight='bold')
+    ax.set_yticks([0.2, 0.4, 0.6, 0.8, 1.0])
+    ax.set_yticklabels(["0.2", "0.4", "0.6", "0.8", "1.0"], color="grey", size=8)
+    ax.set_ylim(0, 1.1)
+    
+    # Title and legend
+    plt.title(f"{target_player.name} vs {twin_player.name}\n(Normalized Position Stats)", size=14, color='black', y=1.1, fontweight='bold')
+    plt.legend(loc='upper right', bbox_to_anchor=(1.2, 1.1))
+    
+    # Display the chart
+    plt.show()
 
 if __name__ == "__main__":
     base_dir = os.path.dirname(__file__)
@@ -275,6 +328,7 @@ if __name__ == "__main__":
         if isinstance(results, str):
             print(results)
         else:
+            # The target player and the list of statistical twin
             target_player = results[0]
             twins_list = results[1]
 
@@ -282,20 +336,25 @@ if __name__ == "__main__":
             all_teams_in_view = [target_player.team] + [item[2].team for item in twins_list]
             all_pos_in_view = [target_player.position] + [item[2].position for item in twins_list]
 
+            # Determining the maximum width required for team and position columns
             local_max_team = max(len(team) for team in all_teams_in_view)
             local_max_pos = max(len(pos) for pos in all_pos_in_view)
 
+            # Preparing player names for aligned terminal output
             target_name_part = f"**{target_player.name}**"
             local_names = [target_name_part] + [f"- {item[2].name}" for item in twins_list]
 
+            # Width of left column
             left_col_width = max(len(name) for name in local_names) + 2
 
             print("\nTop 5 Statistical-Twins for;")
 
+            # Formatting and displaying target player info
             target_info_part = f"({target_player.team:<{local_max_team}} | {target_player.position:^{local_max_pos}} | {target_player.age:>2}):"
 
             print(f"{target_name_part:<{left_col_width}} {target_info_part}\n")
 
+            # Displaying each twin player with similarity percentage
             for item in twins_list:
                 score = item[0]
                 sim_perc = item[1]
@@ -305,3 +364,13 @@ if __name__ == "__main__":
                 twin_info_part = f"({p_info.team:<{local_max_team}} | {p_info.position:^{local_max_pos}} | {p_info.age:>2})"
                 
                 print(f"{twin_name_part:<{left_col_width}} {twin_info_part} | Similarity: {sim_perc:.1f}%")
+            
+            # Asking the user for graph creation
+            best_twin = twins_list[0][2] # Best twin object
+            
+            print("\n---------------------------------------------------")
+            view_chart = input(f"Would you like to see the Radar Chart comparing {target_player.name} and {best_twin.name}? (y/n): ")
+            
+            if view_chart.lower() == 'y':
+                print("Generating chart... Please check your new window.")
+                plot_radar_chart(target_player, best_twin)
