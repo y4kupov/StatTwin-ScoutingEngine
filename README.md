@@ -51,11 +51,15 @@ A smart multi-priority name lookup handles partial names and foreign characters:
 
 ```
 statsTwin/
-├── app.py                  # Streamlit web application
-├── main.py                 # Terminal (CLI) application
 ├── files.data/
 │   └── player_stats.csv    # Player statistics dataset
+├── src/
+│   └── app.py              # Streamlit web application
+│   └── terminal.py         # Terminal (CLI) application
+└──.gitignore
+└── LICENSE
 └── README.md
+└── requirements.txt
 ```
 
 > **Note:** Both scripts resolve the dataset path relative to their own location (`../files.data/player_stats.csv`), so the folder structure above must be maintained.
