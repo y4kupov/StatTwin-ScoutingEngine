@@ -66,69 +66,101 @@ statsTwin/
 
 ---
 
-## Requirements
-
-### Shared (both versions)
+---
+ 
+## Getting Started
+ 
+### Step 1 — Download the project
+ 
+Click the green **Code** button at the top of this page, then select **Download ZIP**. Once downloaded, extract the ZIP file anywhere on your computer.
+ 
+If you have Git installed, you can alternatively run:
+```bash
+git clone https://github.com/your-username/statsTwin.git
+cd statsTwin
 ```
-python >= 3.8
-matplotlib
-numpy
+ 
+---
+ 
+### Step 2 — Install Python
+ 
+If you don't have Python installed, download it from [python.org](https://www.python.org/downloads/) and run the installer.
+ 
+> **Important (Windows):** During installation, check the box that says **"Add Python to PATH"** before clicking Install. Without this, the commands below won't work.
+ 
+To verify Python is installed correctly, open a terminal (Command Prompt on Windows, Terminal on Mac/Linux) and run:
+```bash
+python --version
 ```
-
-### Terminal version only
-No additional dependencies.
-
-### Web version only
-```
-streamlit
-requests
-```
-
-Install everything at once:
+You should see something like `Python 3.11.2`. Any version 3.8 or above is fine.
+ 
+---
+ 
+### Step 3 — Open a terminal in the project folder
+ 
+**Windows:** Open the extracted folder, click on the address bar at the top, type `cmd`, and press Enter.
+ 
+**Mac:** Right-click the folder and select **New Terminal at Folder**.
+ 
+**Linux:** Right-click inside the folder and select **Open Terminal**.
+ 
+---
+ 
+### Step 4 — Install the required libraries
+ 
+Paste this command into the terminal and press Enter:
+ 
 ```bash
 pip install streamlit matplotlib numpy requests
 ```
-
+ 
+Wait for it to finish. You only need to do this once.
+ 
 ---
-
-## Usage
-
-### 🖥️ Terminal Version
-
+ 
+### Step 5 — Run the app
+ 
+Pick whichever version you prefer:
+ 
+#### 🖥️ Terminal Version
+ 
 ```bash
 python main.py
 ```
-
+ 
+The program will load the dataset and ask you for a player name:
+ 
 ```
 Total players loaded & normalized: 2850
-
+ 
 Type a player name to find twins (or type 'exit' to close):
 Player Name: Kvaratskhelia
-
+ 
 Top 5 Statistical-Twins for;
 **Khvicha Kvaratskhelia** (Paris S-G     | FW | 23):
-
+ 
 - Bukayo Saka             (Arsenal       | FW | 23) | Similarity: 91.4%
 - Mohamed Salah           (Liverpool     | FW | 32) | Similarity: 88.7%
 ...
-
+ 
 Would you like to see the Radar Chart comparing Kvaratskhelia and Bukayo Saka? (y/n):
 ```
-
-Type `exit` to quit.
-
-### 🌐 Web Version
-
+ 
+You can search as many players as you like. Type `exit` and press Enter to quit.
+ 
+#### 🌐 Web Version
+ 
 ```bash
 streamlit run app.py
 ```
-
-Then open [http://localhost:8501](http://localhost:8501) in your browser.
-
+ 
+Your browser will open automatically at `http://localhost:8501`. If it doesn't, open your browser and go to that address manually.
+ 
 - Type any player name in the search box and click **Start Scouting 🔍**
 - The app displays the **Top 5 statistical twins** with Wikipedia photos and Transfermarkt links
 - A **radar chart** compares the target player against their closest twin across all position-relevant metrics
-
+To stop the web app, go back to the terminal and press `Ctrl + C`.
+ 
 ---
 
 ## Dataset Format
