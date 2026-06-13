@@ -76,7 +76,7 @@ Click the green **Code** button at the top of this page, then select **Download 
  
 If you have Git installed, you can alternatively run:
 ```bash
-git clone https://github.com/your-username/statsTwin.git
+git clone https://github.com/y4kupov/statsTwin.git
 cd statsTwin
 ```
  
